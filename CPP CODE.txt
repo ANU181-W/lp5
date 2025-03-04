@@ -1,0 +1,129 @@
+#include <iostream>
+#include <omp.h>
+#include <ctime>
+#include <cstdlib>
+#include<bits/stdc++.h>
+using namespace std;
+float st,pt;
+void min_para(int *arr, int n)
+{
+   double min_val = INT_MAX;
+   int i;
+   cout << endl;
+       clock_t time1 = clock();          
+ 
+#pragma omp parallel for reduction(min : min_val)
+   for (i = 0; i <= n-1; i++)
+   {
+    
+      if (arr[i] < min_val)
+      {
+         min_val = arr[i];
+      }
+   }
+   
+   cout << "\n\nmin_val = " << min_val << endl;
+  clock_t timedif = clock()- time1;
+    pt=float(timedif)/CLOCKS_PER_SEC;
+    cout<<"The TIME FOR MIN VALUE IS:"<<pt;
+}
+void min_seq(int *arr, int n)
+{
+   double min_val = INT_MAX;
+   int i;
+   cout << endl;
+       clock_t time1 = clock();          
+ 
+
+   for (i = 0; i <= n-1; i++)
+   {
+    
+      if (arr[i] < min_val)
+      {
+         min_val = arr[i];
+      }
+   }
+   
+   cout << "\n\nmin_val = " << min_val << endl;
+  clock_t timedif = clock()- time1;
+    st=float(timedif)/CLOCKS_PER_SEC;
+    cout<<"The TIME FOR MIN SEQ VALUE IS:"<<st<<endl;
+    cout<<"The speed up time of MIN is:"<<st/pt;
+}
+
+void max(int *arr, int n)
+{
+   double max_val = INT_MIN;
+   int i;
+clock_t time1 = clock();    
+#pragma omp parallel for reduction(max : max_val)
+   for (i = 0; i < n; i++)
+   {
+   
+      if (arr[i] > max_val)
+      {
+         max_val = arr[i];
+      }
+   }
+   cout << "\n\nmax_val = " << max_val << endl;
+    clock_t timedif = clock()- time1;
+    
+    cout<<"The TIME FOR MAX VALUE IS:"<<float(timedif)/CLOCKS_PER_SEC;
+}
+
+
+void avg(int *arr, int n)
+{
+   int i;
+   float avg = 0, sum = 0;
+   clock_t time1 = clock();
+#pragma omp parallel reduction(+:sum)
+   {
+      
+#pragma omp for
+      for (i = 0; i < n; i++)
+      {
+         sum = sum + arr[i];
+        
+      }
+   }
+   cout << "\n\nSum = " << sum << endl;
+   avg = sum / n;
+   cout << "\nAverage = " << avg << endl;
+   clock_t timedif = clock()- time1;
+    printf("The elapsed time is %lf seconds\n", float(timedif)/CLOCKS_PER_SEC);
+    
+}
+
+int main()
+{
+   omp_set_num_threads(2);
+   int n, i;
+
+   cout << "Enter the number of elements in the array: ";
+   cin >> n;
+   int arr[n];
+
+   
+   for (int i = 0; i < n; ++i)
+   {
+      arr[i]=rand()%100;
+   }
+
+   cout << "\nArray elements are: ";
+   for (i = 0; i < n; i++)
+   {
+      cout << arr[i] << ",";
+   }
+   
+  
+
+   min_para(arr, n);
+   min_seq(arr, n);
+
+   //finish = clock();
+
+   max(arr, n);
+   avg(arr, n);
+   return 0;
+}
