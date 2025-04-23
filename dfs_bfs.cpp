@@ -86,8 +86,7 @@ public:
         }
     }
 
-    
-    void parallel_bfs(int start)
+        void parallel_bfs(int start)
     {
         visited[start] = true;
         queue<int> q;
@@ -182,7 +181,7 @@ public:
 
 int main()
 {
-    int V = 1000000, E = 10000000;
+    int V = 10000000, E = 100000000;
     Graph g(V, E);
     double time_seq_dfs, time_par_dfs, time_seq_bfs, time_par_bfs;
 
